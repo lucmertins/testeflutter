@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:testeflutter/constants/Constant.dart';
+import 'package:testeflutter/views/SplashScreen.dart';
 import 'package:testeflutter/views/RandomWords.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -12,7 +15,10 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.cyanAccent,
       ),
       debugShowCheckedModeBanner: false,
-      home: RandomWords(),
+      home: SplashScreen(),
+      routes: <String, WidgetBuilder>{
+        HOME_SCREEN: (BuildContext context) => new RandomWords(),
+      },
     );
   }
 }
