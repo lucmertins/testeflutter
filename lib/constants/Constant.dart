@@ -1,1 +1,2 @@
-String HOME_SCREEN = '/HomeScreen', ANIMATED_SPALSH = '/AnimatedSplashScreen';
+String HOME_SCREEN = '/HomeScreen', ANIMATED_SPALSH = '/AnimatedSplashScreen',MYSCAFFOLD='/MyScaffold',
+TUTORIALHOME='/TutorialHome';
