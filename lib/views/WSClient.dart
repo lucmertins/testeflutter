@@ -1,43 +1,96 @@
 import 'package:flutter/material.dart';
 import 'package:device_info/device_info.dart';
-class WSClient extends StatelessWidget {
+import 'package:testeflutter/utils/NetworkUtil.dart';
+
+class WSClient extends StatefulWidget {
+  @override
+  WSClientState createState() => WSClientState();
+}
+
+class WSClientState extends State<WSClient> {
+  // Create a global key that uniquely identifies the Form widget
+  // and allows validation of the form.
+  //
+  // Note: This is a GlobalKey<FormState>,
+  // not a GlobalKey<MyCustomFormState>.
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+  String _name;
+  String _email;
+  String _mobile;
 
   @override
   Widget build(BuildContext context) {
-    _getId(context).then((onValue){
-      print("device " + onValue );
-    });
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          tooltip: 'Navigation menu',
-          onPressed: null,
+//    _getId(context).then((onValue) {
+//      print("device " + onValue);
+//    });
+    // Build a Form widget using the _formKey created above.
+    return new MaterialApp(
+      home: new Scaffold(
+        appBar: new AppBar(
+          title: new Text('Form Validation'),
         ),
-        title: Text('Testando WS'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            tooltip: 'Search',
-            onPressed: null,
+        body: new SingleChildScrollView(
+          child: new Container(
+            margin: new EdgeInsets.all(15.0),
+            child: new Form(
+              key: _formKey,
+              autovalidate: _autoValidate,
+              child: FormUI(),
+            ),
           ),
-        ],
-      ),
-      // body is the majority of the screen.
-      body: Center(
-        child: Text('Hello, world!'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Add', // used by assistive technologies
-        child: Icon(Icons.add),
-        onPressed: null,
+        ),
       ),
     );
   }
 
+  Widget FormUI() {
+    return new Column(
+      children: <Widget>[
+        new TextFormField(
+          decoration: const InputDecoration(labelText: 'Name'),
+          keyboardType: TextInputType.text,
+        ),
+        new TextFormField(
+          decoration: const InputDecoration(labelText: 'Mobile'),
+          keyboardType: TextInputType.phone,
+        ),
+        new TextFormField(
+          decoration: const InputDecoration(labelText: 'Email'),
+          keyboardType: TextInputType.emailAddress,
+        ),
+        new SizedBox(
+          height: 10.0,
+        ),
+        new RaisedButton(
+          onPressed: _getRestfulString,
+          child: new Text('Validate'),
+        )
+      ],
+    );
+  }
+
+  void _validateInputs() {
+    _getId(context).then((onValue) {
+      print("device " + onValue);
+    });
+  }
+
+  void _getRestfulString() {
+    NetworkUtil netUtil = new NetworkUtil();
+    netUtil
+        .get("http://192.168.0.49:8080/wsrest/jfrmservices/dev/status/getdescpathjson/testemob")
+        .then(
+        (dynamic value) {
+          print(value.toString());
+        });
+    }
+
   Future<String> _getId(BuildContext context) async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (Theme.of(context).platform == TargetPlatform.iOS) {
+    if (Theme
+        .of(context)
+        .platform == TargetPlatform.iOS) {
       IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
       return iosDeviceInfo.identifierForVendor; // unique ID on iOS
     } else {
@@ -45,4 +98,5 @@ class WSClient extends StatelessWidget {
       return androidDeviceInfo.androidId; // unique ID on Android
     }
   }
+
 }
