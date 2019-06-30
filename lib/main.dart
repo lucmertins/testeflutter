@@ -4,6 +4,7 @@ import 'package:testeflutter/views/RandomWords.dart';
 import 'package:testeflutter/views/SplashScreen.dart';
 import 'package:testeflutter/views/MyScaffold.dart';
 import 'package:testeflutter/views/TutorialHome.dart';
+import 'package:testeflutter/views/WSClient.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,14 +17,13 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.cyanAccent,
       ),
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: WSClient(),
       routes: <String, WidgetBuilder>{
         HOME_SCREEN: (BuildContext context) => new RandomWords(),
-        MYSCAFFOLD:(BuildContext context)=> MyScaffold(),
-        TUTORIALHOME:(BuildContext context)=> TutorialHome()
+        MYSCAFFOLD: (BuildContext context) => MyScaffold(),
+        TUTORIALHOME: (BuildContext context) => TutorialHome(),
+        WSCLIENT: (BuildContext context) => WSClient(),
       },
     );
   }
 }
-
-
