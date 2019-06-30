@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:device_info/device_info.dart';
 import 'package:testeflutter/utils/NetworkUtil.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class WSClient extends StatefulWidget {
   @override
@@ -18,6 +19,7 @@ class WSClientState extends State<WSClient> {
   String _name;
   String _email;
   String _mobile;
+  ProgressDialog _pr;
 
   @override
   Widget build(BuildContext context) {
@@ -77,20 +79,25 @@ class WSClientState extends State<WSClient> {
   }
 
   void _getRestfulString() {
+    _pr = new ProgressDialog(context, ProgressDialogType.Normal);
+    _pr.setMessage('Aguarde...');
+    _pr.show();
     NetworkUtil netUtil = new NetworkUtil();
     netUtil
-        .get("http://192.168.0.49:8080/wsrest/jfrmservices/dev/status/getdescpathjson/testemob")
-        .then(
-        (dynamic value) {
-          print(value.toString());
-        });
-    }
+        .get(
+            "http://192.168.0.49:8080/wsrest/jfrmservices/dev/status/getdescpathjson/testemob")
+        .then((dynamic value) {
+      _pr.hide();
+      print(value.toString());
+    }).catchError((onError){
+      _pr.hide();
+      print(onError);
+    });
+  }
 
   Future<String> _getId(BuildContext context) async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (Theme
-        .of(context)
-        .platform == TargetPlatform.iOS) {
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
       IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
       return iosDeviceInfo.identifierForVendor; // unique ID on iOS
     } else {
@@ -98,5 +105,4 @@ class WSClientState extends State<WSClient> {
       return androidDeviceInfo.androidId; // unique ID on Android
     }
   }
-
 }
